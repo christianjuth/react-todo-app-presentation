@@ -36,14 +36,10 @@ function App() {
         <h1>Todo List</h1>
         <hr/>
         {items.map((item, i) => (
-          <form 
+          <div 
             key={item.id}
             className="todoItem"
             onClick={() => handleCheck(item.id)}
-            onSubmit={e => {
-              e.preventDefault();
-              handleCheck(item.id);
-            }}
           >
             <span
               style={{
@@ -56,12 +52,13 @@ function App() {
               checked={item.checked}
               type='checkbox'
               onChange={() => handleCheck(item.id)}
+              onKeyPress={event => {
+                if (event.key === 'Enter') {
+                  handleCheck(item.id);
+                }
+              }}
             />
-            <button 
-              type='submit'
-              style={{display: 'none'}}
-            />
-          </form>
+          </div>
         ))}
         <form 
           onSubmit={e => {
