@@ -2,6 +2,38 @@ import * as React from 'react';
 import './App.css';
 import { v4 as uuidv4 } from 'uuid';
 
+function TodoItem({
+  id,
+  checked,
+  title,
+  handleToggle
+}) {
+  return (
+    <div 
+      className="todoItem"
+      onClick={() => handleToggle(id)}
+    >
+      <span
+        style={{
+          textDecoration: checked ? 'line-through' : undefined
+        }}
+      >
+        {title}
+      </span>
+      <input
+        checked={checked}
+        type='checkbox'
+        onChange={() => handleToggle(id)}
+        onKeyPress={event => {
+          if (event.key === 'Enter') {
+            handleToggle(id);
+          }
+        }}
+      />
+    </div>
+  );
+}
+
 function App() {
   const [inputVal, setInputVal] = React.useState('');
 
@@ -11,7 +43,7 @@ function App() {
   } catch(e) {}
   const [items, setItems] = React.useState(initItems);
 
-  function handleCheck(id) {
+  function handleToggle(id) {
     const index = items.findIndex(item => item.id === id);
     const itemsClone = items.slice(0);
 
@@ -36,29 +68,12 @@ function App() {
         <h1>Todo List</h1>
         <hr/>
         {items.map((item, i) => (
-          <div 
-            key={item.id}
-            className="todoItem"
-            onClick={() => handleCheck(item.id)}
-          >
-            <span
-              style={{
-                textDecoration: item.checked ? 'line-through' : undefined
-              }}
-            >
-              {item.title}
-            </span>
-            <input
-              checked={item.checked}
-              type='checkbox'
-              onChange={() => handleCheck(item.id)}
-              onKeyPress={event => {
-                if (event.key === 'Enter') {
-                  handleCheck(item.id);
-                }
-              }}
-            />
-          </div>
+          <TodoItem
+            id={item.id}
+            title={item.title}
+            checked={item.checked}
+            handleToggle={handleToggle}
+          />
         ))}
         <form 
           onSubmit={e => {
